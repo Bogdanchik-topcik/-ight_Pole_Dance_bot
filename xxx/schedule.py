@@ -7,11 +7,11 @@ from aiogram.enums import ParseMode
 from dotenv import find_dotenv, load_dotenv
 load_dotenv(find_dotenv())
 
-from db import new_mesidDB, give_mesidBD, del_mesidDB
+from usersID import *
 
 sRT = Router()
 bot = Bot(getenv('TOKEN'))
-
+ed = EditID()
 
 Ikb1 = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='POLE DANCE', callback_data='POLE DANCE')],
@@ -27,35 +27,28 @@ Ikb3 = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-
-async def delmess(chatID):
-    ID = give_mesidBD(chatID)
-    if ID:
-        await bot.delete_messages(chat_id=chatID, message_ids=ID)
-        del_mesidDB(chatID)
-
-
 @sRT.callback_query(F.data == 'Расписание')
 async def records(call: CallbackQuery, state: FSMContext): 
 
     await state.clear()
 
     chatID = call.from_user.id
-    await delmess(chatID)
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer("По залам:"))
+    ed.new_messID(await call.message.answer("По залам:"))
     media = await bot.send_media_group(chat_id=chatID, media=[
                                InputMediaPhoto(type='photo', media='AgACAgIAAxkBAAIBaGbQnv6CaOIzqCkJQdv14qjRbUVzAAJM5DEbrIWISrqIcYVdKcQrAQADAgADeAADNQQ'),
                                InputMediaPhoto(type='photo', media='AgACAgIAAxkBAAIBaWbQnxTVWJrx2ru4kWpJKLZ-EzKTAAJP5DEbrIWISrN8d31nr_tOAQADAgADeAADNQQ')
                                ])
     
-
-    for i in media: 
-        new_mesidDB(i)
+    ed.new_messID(media[0])
+    ed.new_messID(media[1])
+    # for i in media: 
+    #     new_mesidDB(i)
     
 
-    new_mesidDB(await call.message.answer('''По дням недели:
+    ed.new_messID(await call.message.answer('''По дням недели:
                               
 Понедельник: 
 18:30 POLE SPORT начинающие  
@@ -96,7 +89,7 @@ async def records(call: CallbackQuery, state: FSMContext):
 18:00 POLE SPORT смешанная
 19:00 STRETCHING   '''))
     
-    new_mesidDB(await call.message.answer('''По направлениям: 
+    ed.new_messID(await call.message.answer('''По направлениям: 
 
 💜POLE SPORT с нуля| ВТ - 18:30, ПТ - 18:00
 💜POLE SPORT начинающие| ПН, ЧТ - 18:30, ВС - 18:00 (смешанная)
@@ -118,23 +111,23 @@ async def prise(call: CallbackQuery, state: FSMContext):
     await state.clear()
 
     chatID = call.from_user.id
-    await delmess(chatID)
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer("<b>Групповые занятия:</b>", parse_mode='HTML'))
-    new_mesidDB(await call.message.answer_photo('AgACAgIAAxkBAAIFQmbUed1m5KeQrEgKGuFfeLeiiUiLAAJp4TEbEAABqUpVg-8eRm403gEAAwIAA3gAAzUE', 
+    ed.new_messID(await call.message.answer("<b>Групповые занятия:</b>", parse_mode='HTML'))
+    ed.new_messID(await call.message.answer_photo('AgACAgIAAxkBAAIFQmbUed1m5KeQrEgKGuFfeLeiiUiLAAJp4TEbEAABqUpVg-8eRm403gEAAwIAA3gAAzUE', 
             caption=" Пробное занятие БЕСПЛАТНО при покупке абонемента в день пробного занятия, срок активации абонемента 7 дней со дня покупки"))
-    new_mesidDB(await call.message.answer("<b>Индивидуальный абонемент:</b>", 'HTML'))
-    new_mesidDB(await call.message.answer_photo('AgACAgIAAxkBAAIFTWbUeimXBdE9EDjpVunyWoae2UNtAAJx4TEbEAABqUr1KZVtgHybhgEAAwIAA3gAAzUE'))
-    new_mesidDB(await call.message.answer("<b>Аренда зала:</b>", parse_mode='HTML'))
-    new_mesidDB(await call.message.answer_photo('AgACAgIAAxkBAAIFTmbUejNdK6-z4GA10cWMe8tjWLPlAAJy4TEbEAABqUqNbJhQdzvADwEAAwIAA3gAAzUE',
+    ed.new_messID(await call.message.answer("<b>Индивидуальный абонемент:</b>", 'HTML'))
+    ed.new_messID(await call.message.answer_photo('AgACAgIAAxkBAAIFTWbUeimXBdE9EDjpVunyWoae2UNtAAJx4TEbEAABqUr1KZVtgHybhgEAAwIAA3gAAzUE'))
+    ed.new_messID(await call.message.answer("<b>Аренда зала:</b>", parse_mode='HTML'))
+    ed.new_messID(await call.message.answer_photo('AgACAgIAAxkBAAIFTmbUejNdK6-z4GA10cWMe8tjWLPlAAJy4TEbEAABqUqNbJhQdzvADwEAAwIAA3gAAzUE',
 caption='''* Максимальная плата за 1 час - 600 рублей, даже если в зале более 4 учеников 
                 
 **Если тренируются ученики вместе с гостями - оплата по прайсу гостей студии.  
 
 Условия субаренды для проведения собственных тренировок на постоянной основе обговариваются в персональном порядке. Для этого просто напишите @lightpoledancestudio .'''))
-    new_mesidDB(await call.message.answer("<b>Правила использования абонементов:</b>", parse_mode='HTML'))
-    new_mesidDB(await call.message.answer(
+    ed.new_messID(await call.message.answer("<b>Правила использования абонементов:</b>", parse_mode='HTML'))
+    ed.new_messID(await call.message.answer(
 '''1. <b>СРОК абонемента</b> - 31 день (кроме безлимитного абонемента на 14 дней)
 2. <b>ПРОДЛЕНИЕ АБОНЕМЕНТА</b> возможно не более, чем на 14 дней <b>по справке от врача</b> о болезни или больничному листу. Детям возможно продление до 21 дня также по справке.
 3. <b>ОТРАБОТКА </b> пропущенных занятий возможна на любом направлении. Отработать можно в течение срока действия абонемента. Если пропущено часовое занятие - отработка только в часовых группах (при отработке в 1,5 часовой группе списываются 2 занятия).
@@ -157,10 +150,10 @@ async def prise(call: CallbackQuery, state: FSMContext):
     await state.clear()
 
     chatID = call.from_user.id
-    await delmess(chatID)
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer("Направления:", reply_markup=Ikb1))
+    ed.new_messID(await call.message.answer("Направления:", reply_markup=Ikb1))
     
 
 @sRT.callback_query(F.data == 'POLE DANCE')
@@ -169,24 +162,21 @@ async def prise(call: CallbackQuery, state: FSMContext):
     await state.clear()
 
     chatID = call.from_user.id
-    ID = give_mesidBD(chatID)
-    ID = ID[1:]
+    
     #print(ID)
-    if ID:
-        await bot.delete_messages(chat_id=chatID, message_ids=ID)
-        del_mesidDB(chatID, all=False)
+    await ed.del_directionID(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAIBzmbRBA7AWZaKrOKqvef5_eRk21kzAAJ_5jEbrIWISkaDA6OFf8uXAQADAgADeAADNQQ', 
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAIBzmbRBA7AWZaKrOKqvef5_eRk21kzAAJ_5jEbrIWISkaDA6OFf8uXAQADAgADeAADNQQ', 
     caption='Pole Dance Art\nЭто танец на пилоне, который в равной мере должен включать в себя владение трюковым пилоном и хореографией. Трюки и элементы должны быть подобранны и наложены на музыку и составлять единый образ с танцевальной составляющей. Соотношение трюков и хореографии варьируется от 50/50 до 70/30.'))
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAIBz2bRBCZmBgfYHOzyw-XZibW1T6MyAAKA5jEbrIWISoGsdXfhXX4rAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAIBz2bRBCZmBgfYHOzyw-XZibW1T6MyAAKA5jEbrIWISoGsdXfhXX4rAQADAgADeAADNQQ',
     caption="Pole Sport\nЗанятия направлены на изучение базовых движений, элементов, методов работы на пилоне. Люди без спортивной подготовки научатся управлять своим телом, готовить его к пилону, а имеющие спортивный опыт освоят основные принципы работы на снаряде. В группе продолжающих изучают элементы более сложного уровня."))
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAIB0GbRBDAr8n6c1RH6vkwSDU1bLdtHAAKB5jEbrIWISoIhT86QgVgjAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAIB0GbRBDAr8n6c1RH6vkwSDU1bLdtHAAKB5jEbrIWISoIhT86QgVgjAQADAgADeAADNQQ',
     caption="Exotic Pole Dance\nЭто женственность, грация и свобода от всего, что осталось за пределами зала. Приглушенный свет и глубокая музыка позволяют раствориться в танце и следовать за своими движениями. Раскрыть свою женскую энергетику, наслаждаться собой в отражении - это именно то, что нужно каждой женщине. "))
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAIB0WbRBDq0mpX-L-iKT6xvK-yZiAUsAAKC5jEbrIWISq4qTpHveQ1EAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAIB0WbRBDq0mpX-L-iKT6xvK-yZiAUsAAKC5jEbrIWISq4qTpHveQ1EAQADAgADeAADNQQ',
     caption='''Pole Dance Choreo\nЕсли вы:
 - любите танцы и не представляете их без пилона
 - хотите развить музыкальность и чувство ритма
@@ -203,15 +193,10 @@ async def prise(call: CallbackQuery, state: FSMContext):
     await state.clear()
 
     chatID = call.from_user.id
-    ID = give_mesidBD(chatID)
-    ID = ID[1:]
-    if ID:
-        await bot.delete_messages(chat_id=chatID, message_ids=ID)
-        del_mesidDB(chatID, all=False)
-    await call.answer()
+    await ed.del_directionID(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICImbRC56EjrM4FfqaxkTLAAGrboBLOQAChOYxG6yFiEpx37iC6fn9nQEAAwIAA3gAAzUE',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICImbRC56EjrM4FfqaxkTLAAGrboBLOQAChOYxG6yFiEpx37iC6fn9nQEAAwIAA3gAAzUE',
 caption='''Stretching\nЭто комплекс упражнений, направленный на растяжку связок, мышц и сухожилий. 
 Положительные эффекты от занятий стрейчингом: 
 · стимулирующее воздействие на кровообращение и циркуляцию лимфы в организме; 
@@ -221,16 +206,16 @@ caption='''Stretching\nЭто комплекс упражнений, напра�
  · улучшение координации движений.
 При регулярных тренировках Вы сможете улучшить осанку, сесть на шпагат, встать на мостик. В группе используется индивидуальный подход, поэтому занятия подойдут как для начинающего, так и продвинутого уровня.'''))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICI2bRC6lzVPqd3LgpxdOZ5bV4XpGDAAKF5jEbrIWISrapHq1F_Y2TAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICI2bRC6lzVPqd3LgpxdOZ5bV4XpGDAAKF5jEbrIWISrapHq1F_Y2TAQADAgADeAADNQQ',
 caption='Strip\nStrip - не просто танец на высоких каблуках, это невероятно многогранный стиль танца. Он таит в себе почти неограниченные возможности: это игра с мельчайшими музыкальными акцентами, это всегда новый образ и новая история вашей души. Насыщенность, чёткость, лаконичность - всё это Strip.'))
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICJGbRC7QpjJVIJo52kT5ErRLRdKiAAAKG5jEbrIWISoYr4ELHI8OaAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICJGbRC7QpjJVIJo52kT5ErRLRdKiAAAKG5jEbrIWISoYr4ELHI8OaAQADAgADeAADNQQ',
 caption='Salsation\nSalsation® - это увлекательное сочетание различных танцевальных направлений и музыкальных ритмов. Все хореографии направления разработаны на основе трех главных принципов - сочетание лиричности, музыкальности и функциональности.'))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICJWbRC7weysCLn_hsxsXnUQKC3kAcAAKH5jEbrIWISsNUbcQnEg_SAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICJWbRC7weysCLn_hsxsXnUQKC3kAcAAKH5jEbrIWISsNUbcQnEg_SAQADAgADeAADNQQ',
 caption='Choreo\nАвторская хореография, совмещающая в себе несколько танцевальных направлений. Танец отражает то, как хореограф видит музыку. Автор передает настроение с помощью всех доступных ему танцевальных техник, соединяя их в единую гармоничную композицию. Если вам хочется разнообразия в танце, и вы за эксперименты - Choreo определенно для вас!'))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICJmbRC8PZcAsoIwg6QfW3Ktb44aK3AAKI5jEbrIWISp8CH58a48toAQADAgADeAADNQQ',
+    ed.new_directionID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICJmbRC8PZcAsoIwg6QfW3Ktb44aK3AAKI5jEbrIWISp8CH58a48toAQADAgADeAADNQQ',
 caption='''HANDSTAND (стойки на руках)\nСтойка на руках одна из самых сложных и в тоже время необычный и эффектный трюк. Она способствует укреплению мышц плечевого пояса и спины, улучшает работу вестибулярного аппарата, укрепляет психоэмоциональное состояние и повышает самооценку.
 Стойки также помогут вам при занятиях на пилоне'''))
     
@@ -241,12 +226,12 @@ async def prise(call: CallbackQuery, state: FSMContext):
 
     await state.clear()
 
-    chatID = call.from_user.id
-    await delmess(chatID)
+    chatID = call.message.chat.id
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await bot.send_location(chat_id=chatID, latitude='54.862812', longitude='83.093690'))
-    new_mesidDB(await call.message.answer(text="улица Мусы Джалиля, 21/4 микрорайон Академгородок, Советский район, Новосибирск", reply_markup=Ikb2))
+    ed.new_messID(await bot.send_location(chat_id=chatID, latitude='54.862812', longitude='83.093690'))
+    ed.new_messID(await call.message.answer(text="улица Мусы Джалиля, 21/4 микрорайон Академгородок, Советский район, Новосибирск", reply_markup=Ikb2))
 
 
 
@@ -256,30 +241,30 @@ async def prise(call: CallbackQuery, state: FSMContext):
     await state.clear()
 
     chatID = call.from_user.id
-    await delmess(chatID)
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICMGbRL37udLThLzyh848O05k6dvy5AALP4TEb1FmISmSD9O-NVJfPAQADAgADeAADNQQ',
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICMGbRL37udLThLzyh848O05k6dvy5AALP4TEb1FmISmSD9O-NVJfPAQADAgADeAADNQQ',
 caption='''Юля Солопова
 (Pole Dance Art, Pole Choreo, Strip)''', parse_mode=ParseMode.HTML))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICMWbRL4_zoAVzlJqDIMR3DPbXByGXAAKs5jEbrIWISiPSx2XIOlT6AQADAgADeAADNQQ',
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICMWbRL4_zoAVzlJqDIMR3DPbXByGXAAKs5jEbrIWISiPSx2XIOlT6AQADAgADeAADNQQ',
 caption='''Екатерина Гольд
 (Pole Sport, Stretching)'''))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICMmbRL5Z-RJAHnxOQN7qhsPJ5EmtoAAKt5jEbrIWISvDjpMZ8G5EiAQADAgADeAADNQQ',
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICMmbRL5Z-RJAHnxOQN7qhsPJ5EmtoAAKt5jEbrIWISvDjpMZ8G5EiAQADAgADeAADNQQ',
 caption='''Катя Ропперт
 (Exotic Pole Dance)'''))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICM2bRL56m8IB_8_LX8jpw7H5y4gtRAAKG5jEbrIWISoYr4ELHI8OaAQADAgADeAADNQQ',
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICM2bRL56m8IB_8_LX8jpw7H5y4gtRAAKG5jEbrIWISoYr4ELHI8OaAQADAgADeAADNQQ',
 caption='''Марина Герлиц
 (Salsation)'''))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICNGbRL6ePD6zU9I0yM5RzaA49TvX-AAKI5jEbrIWISp8CH58a48toAQADAgADeAADNQQ',
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICNGbRL6ePD6zU9I0yM5RzaA49TvX-AAKI5jEbrIWISp8CH58a48toAQADAgADeAADNQQ',
 caption='''Наталья Бажина
 (Handstand)'''))
     
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAICNWbRL6wAASzvQBFSqZ_sFqKrwd6FmgACruYxG6yFiEqCQPfOTontPAEAAwIAA3gAAzUE',
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAICNWbRL6wAASzvQBFSqZ_sFqKrwd6FmgACruYxG6yFiEqCQPfOTontPAEAAwIAA3gAAzUE',
 caption='''Надя Солопова
 (Choreo)'''))
     
@@ -289,12 +274,12 @@ async def prise(call: CallbackQuery, state: FSMContext):
 
     await state.clear()
 
-    chatID = call.from_user.id
-    await delmess(chatID)
+    chatID = call.message.chat.id
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer("<b>АКЦИИ и ПРАВИЛА</b>", parse_mode='HTML'))
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAIC3GbRbkzvW-V-yzkAAezQZD8X4mj0ngACnecxG6yFiEo7Jx1e7n_pQgEAAwIAA3gAAzUE',
+    ed.new_messID(await call.message.answer("<b>АКЦИИ и ПРАВИЛА</b>", parse_mode='HTML'))
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAIC3GbRbkzvW-V-yzkAAezQZD8X4mj0ngACnecxG6yFiEo7Jx1e7n_pQgEAAwIAA3gAAzUE',
                                                 caption="<b>ОБЯЗАТЕЛЬНО ОЗНАКОМЬТЕСЬ С ТЕХНИКОЙ БЕЗОПАСНОСТИ</b>", parse_mode='HTML',
                                                 reply_markup=Ikb3))
     
@@ -305,11 +290,11 @@ async def prise(call: CallbackQuery, state: FSMContext):
 
     await state.clear()
 
-    chatID = call.from_user.id
-    await delmess(chatID)
+    chatID = call.message.chat.id
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer('''<b>Техника безопасности при проведении танцевальных занятий в студии "Light pole dance</b>"
+    ed.new_messID(await call.message.answer('''<b>Техника безопасности при проведении танцевальных занятий в студии "Light pole dance</b>"
 1. Общие требования правил техники безопасности (далее ПТБ)
 1.1. К танцевальным занятиям допускаются участники, прошедшие инструктаж по технике
 безопасности, соблюдающие указания преподавателя, расписавшиеся в журнале регистрации инструктажа.
@@ -344,7 +329,7 @@ async def prise(call: CallbackQuery, state: FSMContext):
 Показать список оценивших
 ''', parse_mode='HTML'))
     
-    new_mesidDB(await call.message.answer('''<b>Общие правила посещения студии "Light pole dance"</b>
+    ed.new_messID(await call.message.answer('''<b>Общие правила посещения студии "Light pole dance"</b>
 1. При первом посещении Студии рекомендуем Вам:
 - ознакомиться с расписанием групповых занятий;
 - ознакомиться с правилами техники безопасности Студии.
@@ -377,13 +362,13 @@ async def prise(call: CallbackQuery, state: FSMContext):
 
     await state.clear()
 
-    chatID = call.from_user.id
-    await delmess(chatID)
+    chatID = call.message.chat.id
+    await ed.del_MessChat(chatID)
     await call.answer()
 
-    new_mesidDB(await call.message.answer("<b>Мы - Light Pole Dance. Студия Pole Dance и танца в Академгородке</b>", parse_mode='HTML'))
-    new_mesidDB(await call.message.answer_photo(photo='AgACAgIAAxkBAAIC82bRccakmcec_2DiQSAhHxJa9yYGAALG5zEbrIWISg2Q9EFX0IYOAQADAgADeAADNQQ'))
-    new_mesidDB(await call.message.answer('''Специально для вас большая профессиональная команда опытных тренеров.
+    ed.new_messID(await call.message.answer("<b>Мы - Light Pole Dance. Студия Pole Dance и танца в Академгородке</b>", parse_mode='HTML'))
+    ed.new_messID(await call.message.answer_photo(photo='AgACAgIAAxkBAAIC82bRccakmcec_2DiQSAhHxJa9yYGAALG5zEbrIWISg2Q9EFX0IYOAQADAgADeAADNQQ'))
+    ed.new_messID(await call.message.answer('''Специально для вас большая профессиональная команда опытных тренеров.
 Наши тренеры - чемпионы и тренеры чемпионов!
 
 Приглашаем на занятия по направлениям:

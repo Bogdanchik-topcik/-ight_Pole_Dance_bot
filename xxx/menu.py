@@ -2,10 +2,10 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-from db import checkDB
+from usersID import *
 
 mRT = Router()
-
+ed = EditID()
 
 Ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Запись на занятие', callback_data='Запись')],
@@ -21,9 +21,8 @@ Ikb = InlineKeyboardMarkup(inline_keyboard=[
 
 @mRT.message(CommandStart())
 async def menu(mess: Message):
-    mes = await mess.answer(text='''Привет! Мы студия Light pole dance. 
+    await mess.answer(text='''Привет! Мы студия Light pole dance. 
 Хочешь научиться крутым трюкам, прокачать силу на pole dance, улучшить растяжку, или может научиться танцевать ? 
 Тогда тебе к нам. Задавай свои вопросы и записывайся на занятие.''', reply_markup=Ikb)
-    mesID = mes.chat.id
-    checkDB(mesID)
+    ed.newID(mess)
     

@@ -12,7 +12,10 @@ load_dotenv(find_dotenv())
 
 bot = Bot(token=getenv('TOKEN'))
 dp = Dispatcher()
-dp.include_routers(mRT, rRT, sRT)
+dp.include_routers(mRT, 
+                   rRT, 
+                   sRT
+                   )
 
 @dp.message(F.photo)
 async def nnn(photo: aiogram.types.Message):
